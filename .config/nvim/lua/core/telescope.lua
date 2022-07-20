@@ -1,16 +1,20 @@
 local telescope = require('telescope')
 local actions = require('telescope.actions')
+local themes = require('telescope.themes')
 
 -- Setup
 telescope.setup {
   defaults = {
     path_display = { truncate = 2 },
-		sorting_strategy = "ascending",
-		layout_strategy = "flex",
-		layout_config = {
+    sorting_strategy = "ascending",
+    layout_strategy = "flex",
+    layout_config = {
       width = 0.95,
       height = 0.95,
       prompt_position = "top",
+      bottom_pane = {
+        height = 8,
+      },
       horizontal = {
         preview_width = function(_, cols, _)
           if cols > 200 then
@@ -24,7 +28,7 @@ telescope.setup {
         preview_cutoff = 1,
         preview_height = 0.6,
       },
-		},
+    },
     mappings = {
       i = {
         ["<C-h>"] = "which_key",
@@ -62,7 +66,11 @@ map('n', '<leader>sr', '<cmd>Telescope oldfiles<cr>')
 map('n', '<leader>sc', '<cmd>Telescope commands<cr>')
 map('n', '<leader>sh', '<cmd>Telescope help_tags<cr>')
 map('n', '<leader>sm', '<cmd>Telescope man_pages<cr>')
-map('n', '<leader>st', '<cmd>Telescope colorscheme<cr>')
+
+map('n', '<leader>st', function()
+  require 'telescope.builtin'.colorscheme({ layout_strategy = 'bottom_pane' })
+end)
+
 map('n', '<leader>sq', '<cmd>Telescope quickfix<cr>')
 map('n', '<leader>sk', '<cmd>Telescope keymaps<cr>')
 
@@ -79,7 +87,7 @@ map('n', '<leader>sx', '<cmd>Telescope tmux sessions<cr>')
 map('n', '<leader>so', '<cmd>Telescope tmux windows<cr>')
 
 -- Custom pickers
-map('n', '<leader>sR', function ()
+map('n', '<leader>sR', function()
   require('telescope.builtin').oldfiles({
     prompt_title = 'CWD Recent',
     only_cwd = true
@@ -101,4 +109,3 @@ map('n', '<leader>sa', function()
     hidden = true
   })
 end, { desc = 'Hidden Files' })
-

@@ -18,10 +18,9 @@ require('lualine').setup {
   },
   sections = {
     lualine_b = {
-      -- 'branch',
-      { 'b:gitsigns_head', icon = '' },
+      { 'b:gitsigns_head', icon = '', padding = { left = 1, right = 0 } },
       { 'diff', source = diff_source },
-      { 'diagnostics', icons_enabled = true }
+      { 'diagnostics', icons_enabled = true },
     },
     lualine_c = {
       { 'filetype', icon_only = true, padding = { left = 1, right = 0 } },

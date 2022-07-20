@@ -54,11 +54,12 @@ else
       use 'rafamadriz/friendly-snippets'
       use 'saadparwaiz1/cmp_luasnip'
       use 'hrsh7th/cmp-nvim-lsp'
+      use 'hrsh7th/cmp-nvim-lsp-signature-help'
       use 'hrsh7th/cmp-buffer'
       use 'hrsh7th/cmp-path'
       use 'hrsh7th/cmp-cmdline'
-      use 'hrsh7th/cmp-nvim-lua'
       use 'petertriho/cmp-git'
+      use 'hrsh7th/cmp-nvim-lua'
 
       use {
         'uga-rosa/cmp-dictionary',
@@ -101,6 +102,7 @@ else
 
       use {
         'numToStr/Comment.nvim',
+        requires = 'JoosepAlviste/nvim-ts-context-commentstring',
         config = [[require 'extra.comment']]
       }
 
@@ -116,14 +118,16 @@ else
       -- use 'mfussenegger/nvim-dap'
       -- use 'ThePrimeagen/harpoon'
 
+      use 'ray-x/aurora'
       use 'fenetikm/falcon'
       use 'kyazdani42/blue-moon'
       use 'whatsthatsmell/codesmell_dark.vim'
 
       use 'ishan9299/nvim-solarized-lua'
-      use 'Mofiqul/vscode.nvim'
+      use 'mhartington/oceanic-next'
       use 'folke/tokyonight.nvim'
       use 'rebelot/kanagawa.nvim'
+      use 'Mofiqul/vscode.nvim'
       use {
         'rose-pine/neovim',
         as = 'rose-pine',

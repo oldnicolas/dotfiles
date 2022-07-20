@@ -39,29 +39,60 @@ cmp.setup {
     { name = 'cmp_tabnine' },
   }, {
     { name = 'buffer' },
+  }, {
     { name = 'dictionary', keyword_length = 4 },
   }),
   formatting = {
     format = lspkind.cmp_format({
-      mode = 'symbol_text',
+      mode = 'symbol',
       preset = 'codicons',
       maxwidth = 50,
+      -- menu = {
+      --   cmp_tabnine = "[TN]",
+      --   nvim_lua = "[Lua]",
+      --   nvim_lsp = "[LSP]",
+      --   luasnip = "[Snippet]",
+      --   dictionary = "[Dictionary]",
+      --   buffer = "[Buffer]",
+      --   path = "[Path]"
+      -- },
       menu = {
-        cmp_tabnine = "[TN]",
-        nvim_lua = "[Lua]",
-        nvim_lsp = "[LSP]",
-        luasnip = "[Snippet]",
-        dictionary = "[Dict]",
-        buffer = "[Buffer]",
-        path = "[Path]"
+        cmp_tabnine = "",
+        nvim_lsp = "",
+        nvim_lua = "",
+        dictionary = "",
+        buffer = "﬘",
+        path = "",
+        -- luasnip = "ﲳ",
+        -- treesitter = " ",
+        -- spell = " 暈",
+        -- emoji = "ﲃ",
+        -- look = "﬜",
       },
     })
   },
+  -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring#commentnvim
+  pre_hook = function(ctx)
+    local U = require 'Comment.utils'
+
+    local location = nil
+    if ctx.ctype == U.ctype.block then
+      location = require('ts_context_commentstring.utils').get_cursor_location()
+    elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+      location = require('ts_context_commentstring.utils').get_visual_start_location()
+    end
+
+    return require('ts_context_commentstring.internal').calculate_commentstring {
+      key = ctx.ctype == U.ctype.line and '__default' or '__multiline',
+      location = location,
+    }
+  end,
 }
 
 cmp.setup.filetype('lua', {
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
+    { name = "nvim_lsp_signature_help" },
   }, {
     { name = 'nvim_lua' },
   }, {
