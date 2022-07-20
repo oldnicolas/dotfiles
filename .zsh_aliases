@@ -1,0 +1,25 @@
+alias c='clear'
+alias q='exit'
+
+alias v='nvim'
+
+alias mv='mv -v'
+alias cp='cp -v'
+alias rm='rm -v'
+alias ln='ln -v'
+alias mkdir='mkdir -v'
+
+alias dir='dir --color=auto'
+alias diff='diff --color=auto'
+alias ls='ls -hN --color=auto --group-directories-first'
+alias ll='ls -alF'
+
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
+
+alias tmux='TERM=tmux-256color tmux'
+alias t='tmux'
+alias ts='tmux-sessionizer'
+alias tl='tmux ls'
+alias ta='tmux attach-session -t'

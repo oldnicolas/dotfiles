@@ -1,0 +1,114 @@
+# ------------------------------------------------------------------
+# Shell Options
+# man zshoptions
+# https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/
+# https://github.com/zimfw/environment/blob/master/init.zsh
+#
+# Tips:
+# Reverting to defaults: emulate -LR zsh
+# Showing the current options: setopt
+# ------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+# Changing directories
+# ----------------------------------------------------------------------
+
+# Perform cd to a directory if the typed command is invalid, but is a directory.
+setopt AUTO_CD
+
+# Make cd push the old directory to the directory stack.
+setopt AUTO_PUSHD
+
+# Don't print the working directory after a cd.
+autoload -Uz is-at-least && if is-at-least 5.8; then
+  # Don't print the working directory after a cd.
+  setopt CD_SILENT
+fi
+
+# Don't push multiple copies of the same directory to the stack.
+setopt PUSHD_IGNORE_DUPS
+
+# Don't print the directory stack after pushd or popd.
+setopt PUSHD_SILENT
+
+# Have pushd without arguments act like `pushd ${HOME}`.
+setopt PUSHD_TO_HOME
+
+# ----------------------------------------------------------------------
+# Expansion and globbing
+# ----------------------------------------------------------------------
+
+# Treat `#`, `~`, and `^` as patterns for filename globbing.
+setopt EXTENDED_GLOB
+
+# ----------------------------------------------------------------------
+# History
+# ----------------------------------------------------------------------
+
+# The file to save the history in
+HISTFILE=$HOME/.cache/zsh/.zhistory
+
+# The maximum number of events stored internally and saved in the history file.
+# The former is greater than the latter in case user wants HIST_EXPIRE_DUPS_FIRST.
+HISTSIZE=50000
+SAVEHIST=40000
+
+# Ignore duplicates when searching
+setopt HIST_FIND_NO_DUPS
+
+# Delete old recorded entry if new entry is a duplicate.
+setopt HIST_IGNORE_ALL_DUPS 
+
+# Remove commands from the history that begin with a space.
+setopt HIST_IGNORE_SPACE
+
+# Show the substituted command in the prompt instead
+setopt HIST_VERIFY
+
+# Cause all terminals to share the same history 'session'.
+setopt SHARE_HISTORY
+
+# Save each command’s beginning timestamp and the duration to the history file
+setopt EXTENDED_HISTORY
+
+# Add commands as they are typed, not at shell exit
+setopt INC_APPEND_HISTORY
+
+# Remove blank lines from history
+setopt HIST_REDUCE_BLANKS
+
+# Disable write duplicate entries in the history file.
+setopt HIST_SAVE_NO_DUPS
+
+# ----------------------------------------------------------------------
+# Input/output
+# ----------------------------------------------------------------------
+
+# Allow comments starting with `#` in the interactive shell.
+setopt INTERACTIVE_COMMENTS
+
+# Disallow `>` to overwrite existing files. Use `>|` or `>!` instead.
+setopt NO_CLOBBER
+
+# ----------------------------------------------------------------------
+# Job control
+# ----------------------------------------------------------------------
+
+# List jobs in verbose format by default.
+setopt LONG_LIST_JOBS
+
+# Prevent background jobs being given a lower priority.
+setopt NO_BG_NICE
+
+# Prevent status report of jobs on shell exit.
+setopt NO_CHECK_JOBS
+
+# Prevent SIGHUP to jobs on shell exit.
+setopt NO_HUP
+
+# ----------------------------------------------------------------------
+# Correction
+# ----------------------------------------------------------------------
+
+# setopt CORRECT
+# setopt CORRECT_ALL
