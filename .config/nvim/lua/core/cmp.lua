@@ -47,15 +47,6 @@ cmp.setup {
       mode = 'symbol',
       preset = 'codicons',
       maxwidth = 50,
-      -- menu = {
-      --   cmp_tabnine = "[TN]",
-      --   nvim_lua = "[Lua]",
-      --   nvim_lsp = "[LSP]",
-      --   luasnip = "[Snippet]",
-      --   dictionary = "[Dictionary]",
-      --   buffer = "[Buffer]",
-      --   path = "[Path]"
-      -- },
       menu = {
         cmp_tabnine = "",
         nvim_lsp = "",
@@ -92,7 +83,7 @@ cmp.setup {
 cmp.setup.filetype('lua', {
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    { name = "nvim_lsp_signature_help" },
+    -- { name = "nvim_lsp_signature_help" },
   }, {
     { name = 'nvim_lua' },
   }, {
@@ -115,3 +106,18 @@ cmp.setup.cmdline(':', {
     { name = 'cmdline' }
   })
 })
+
+require('cmp_dictionary').setup({
+  dic = {
+    ['*'] = { '/usr/share/dict/words' },
+  }
+})
+
+require('cmp_tabnine.config'):setup {
+  max_lines = 1000;
+  max_num_results = 20;
+  sort = true;
+  run_on_every_keystroke = true;
+  snippet_placeholder = '..';
+  show_prediction_strength = true;
+}

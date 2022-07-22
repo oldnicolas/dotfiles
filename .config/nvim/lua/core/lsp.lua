@@ -10,7 +10,8 @@ require("nvim-lsp-installer").setup {
   }
 }
 
-local lspconfig = require 'lspconfig'
+-- LSP Config
+local lspconfig = require('lspconfig')
 
 -- Keymap
 local function map(mode, l, r, opts)
@@ -18,8 +19,8 @@ local function map(mode, l, r, opts)
   vim.keymap.set(mode, l, r, opts)
 end
 
-map('n', 'g[', vim.diagnostic.goto_prev, { desc = 'Diagnostic go to prev' })
-map('n', 'g]', vim.diagnostic.goto_next, { desc = 'Diagnostic go to next' })
+map('n', '<leader>dp', vim.diagnostic.goto_prev, { desc = 'Diagnostic go to prev' })
+map('n', '<leader>dn', vim.diagnostic.goto_next, { desc = 'Diagnostic go to next' })
 map('n', '<space>df', vim.diagnostic.open_float, { desc = 'Diagnostic open float' })
 map('n', '<space>ds', vim.diagnostic.setloclist, { desc = 'Diagnostic setloclist' })
 
@@ -31,19 +32,18 @@ local custom_attach = function(_, bufnr)
     vim.keymap.set(mode, l, r, opts)
   end
 
-  bufmap('n', 'gd', vim.lsp.buf.definition, { desc = 'LSP definition' })
-  bufmap('n', 'gD', vim.lsp.buf.declaration, { desc = 'LSP declaration' })
-  bufmap('n', 'gi', vim.lsp.buf.implementation, { desc = 'LSP implementation' })
-  bufmap('n', 'gt', vim.lsp.buf.type_definition, { desc = 'LSP type definition' })
-  bufmap('n', 'gr', vim.lsp.buf.rename, { desc = 'LSP rename' })
-  bufmap('n', 'ga', vim.lsp.buf.code_action, { desc = 'LSP code action' })
-  bufmap('n', 'gR', vim.lsp.buf.references, { desc = 'LSP references' })
-  bufmap('n', 'gF', vim.lsp.buf.formatting, { desc = 'LSP formatting' })
-  bufmap('n', 'g0', vim.lsp.buf.document_symbol, { desc = 'LSP document symbol' })
-  bufmap('n', 'gW', vim.lsp.buf.workspace_symbol, { desc = 'LSP workspace symbol' })
-
-  bufmap('n', 'K', vim.lsp.buf.hover, { desc = 'LSP hover' })
-  bufmap('n', '<C-k>', vim.lsp.buf.signature_help, { desc = 'LSP signature help' })
+  bufmap('n', '<space>la', vim.lsp.buf.code_action, { desc = 'LSP code action' })
+  bufmap('n', '<space>ld', vim.lsp.buf.definition, { desc = 'LSP definition' })
+  bufmap('n', '<space>lD', vim.lsp.buf.declaration, { desc = 'LSP declaration' })
+  bufmap('n', '<space>li', vim.lsp.buf.implementation, { desc = 'LSP implementation' })
+  bufmap('n', '<space>lt', vim.lsp.buf.type_definition, { desc = 'LSP type definition' })
+  bufmap('n', '<space>lr', vim.lsp.buf.rename, { desc = 'LSP rename' })
+  bufmap('n', '<space>lR', vim.lsp.buf.references, { desc = 'LSP references' })
+  bufmap('n', '<space>lf', vim.lsp.buf.formatting, { desc = 'LSP formatting' })
+  bufmap('n', '<space>ls', vim.lsp.buf.document_symbol, { desc = 'LSP document symbol' })
+  bufmap('n', '<space>lw', vim.lsp.buf.workspace_symbol, { desc = 'LSP workspace symbol' })
+  bufmap('n', '<space>lk', vim.lsp.buf.hover, { desc = 'LSP hover' })
+  bufmap('n', '<space>lh', vim.lsp.buf.signature_help, { desc = 'LSP signature help' })
 
   bufmap('n', '<space>wa', vim.lsp.buf.add_workspace_folder, { desc = 'LSP add workspace folder' })
   bufmap('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, { desc = 'LSP remove workspace folder' })
@@ -66,41 +66,35 @@ updated_capabilities.textDocument.foldingRange = {
 
 -- Sumneko Lua
 -- Settings: https://github.com/sumneko/lua-language-server/blob/master/locale/en-us/setting.lua
-local sumneko_lua_settings = {
-  Lua = {
-    completion = {
-      callSnippet = 'Disable',
-    },
-    runtime = {
-      version = 'LuaJIT',
-    },
-    diagnostics = {
-      globals = { 'vim' },
-      neededFileStatus = {
-        ['codestyle-check'] = 'Any',
+-- https://github.com/folke/lua-dev.nvim/blob/main/lua/lua-dev/sumneko.lua
+local luadev = require("lua-dev").setup({
+  lspconfig = {
+    on_attach = custom_attach,
+    capabilities = updated_capabilities,
+    settings = {
+      Lua = {
+        completion = {
+          callSnippet = 'Disable',
+        },
+        diagnostics = {
+          globals = { 'vim' },
+          neededFileStatus = {
+            ['codestyle-check'] = 'Any',
+          },
+        },
+        format = {
+          enable = true,
+          defaultConfig = {
+            indent_style = 'space',
+            indent_size = '2',
+          }
+        },
       },
     },
-    workspace = {
-      library = vim.api.nvim_get_runtime_file('', true),
-    },
-    telemetry = {
-      enable = false,
-    },
-    format = {
-      enable = true,
-      defaultConfig = {
-        indent_style = 'space',
-        indent_size = '2',
-      }
-    },
-  },
-}
+  }
+})
 
-lspconfig.sumneko_lua.setup {
-  on_attach = custom_attach,
-  capabilities = updated_capabilities,
-  settings = sumneko_lua_settings,
-}
+lspconfig.sumneko_lua.setup(luadev)
 
 -- Solidity
 -- https://github.com/qiuxiang/solidity-ls
@@ -118,3 +112,27 @@ lspconfig.solidity.setup {
   on_attach = custom_attach,
   capabilities = updated_capabilities,
 }
+
+-- Typescript
+require("typescript").setup({
+  server = {
+    on_attach = custom_attach,
+    capabilities = updated_capabilities,
+  },
+})
+
+-- LSP Signature
+require("lsp_signature").setup({
+  log_path = vim.env.HOME .. "/.cache/nvim/lsp-signature.log",
+  -- debug = true,
+  -- floating_window = false,
+  -- handler_opts = { border = "single" },
+  -- transparency = 10,
+})
+
+-- UI Customization
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end

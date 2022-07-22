@@ -1,11 +1,9 @@
 local telescope = require('telescope')
 local actions = require('telescope.actions')
-local themes = require('telescope.themes')
 
 -- Setup
 telescope.setup {
   defaults = {
-    path_display = { truncate = 2 },
     sorting_strategy = "ascending",
     layout_strategy = "flex",
     layout_config = {
