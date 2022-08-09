@@ -1,16 +1,13 @@
-vim.g.mapleader = ' '
-
 vim.opt.clipboard = "unnamed,unnamedplus"
 vim.opt.termguicolors = true
 
 vim.opt.number = true
 vim.opt.relativenumber = true
--- vim.opt.colorcolumn = '80'
+vim.opt.colorcolumn = '80'
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.shiftround = true
-vim.opt.softtabstop = 0
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 
@@ -71,4 +68,4 @@ vim.opt.foldenable = true
 vim.opt.laststatus = 3
 
 -- https://github.com/neovim/neovim/pull/16251
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1

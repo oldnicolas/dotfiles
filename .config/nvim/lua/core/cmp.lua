@@ -11,6 +11,7 @@ cmp.setup {
   mapping = cmp.mapping.preset.insert({
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-u>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
@@ -48,17 +49,22 @@ cmp.setup {
       preset = 'codicons',
       maxwidth = 50,
       menu = {
-        cmp_tabnine = "",
+        cmp_tabnine = 'ﮧ',
         nvim_lsp = "",
         nvim_lua = "",
-        dictionary = "",
+        dictionary = '',
         buffer = "﬘",
         path = "",
+        -- luasnip = '',
+        -- luasnip = '',
         -- luasnip = "ﲳ",
-        -- treesitter = " ",
+        -- luasnip = '',
+        -- treesitter = "",
         -- spell = " 暈",
         -- emoji = "ﲃ",
         -- look = "﬜",
+        -- cmp_tabnine = "",
+        -- dictionary = "",
       },
     })
   },

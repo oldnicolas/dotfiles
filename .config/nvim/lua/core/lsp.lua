@@ -1,28 +1,27 @@
--- Automatic server installation
-require("nvim-lsp-installer").setup {
-  automatic_installation = true,
+-- Automatic server installation ==============================================
+require("mason").setup({
   ui = {
     icons = {
-      server_installed = "✓",
-      server_pending = "➜",
-      server_uninstalled = "✗"
+      package_installed = "✓",
+      package_pending = "➜",
+      package_uninstalled = "✗"
     }
   }
-}
+})
 
--- LSP Config
-local lspconfig = require('lspconfig')
+require("mason-lspconfig").setup({
+  automatic_installation = true,
+})
 
--- Keymap
-local function map(mode, l, r, opts)
-  opts = vim.tbl_extend("force", { noremap = true, silent = true }, opts or {})
-  vim.keymap.set(mode, l, r, opts)
+-- LSP Config =================================================================
+local function map(mode, l, r, options)
+  options = vim.tbl_extend("force", { noremap = true, silent = true }, options or {})
+  vim.keymap.set(mode, l, r, options)
 end
 
-map('n', '<leader>dp', vim.diagnostic.goto_prev, { desc = 'Diagnostic go to prev' })
-map('n', '<leader>dn', vim.diagnostic.goto_next, { desc = 'Diagnostic go to next' })
-map('n', '<space>df', vim.diagnostic.open_float, { desc = 'Diagnostic open float' })
-map('n', '<space>ds', vim.diagnostic.setloclist, { desc = 'Diagnostic setloclist' })
+local lspconfig = require('lspconfig')
+local configs = require('lspconfig.configs')
+local util = require('lspconfig.util')
 
 local custom_attach = function(_, bufnr)
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -64,7 +63,7 @@ updated_capabilities.textDocument.foldingRange = {
   lineFoldingOnly = true
 }
 
--- Sumneko Lua
+-- Sumneko Lua ================================================================
 -- Settings: https://github.com/sumneko/lua-language-server/blob/master/locale/en-us/setting.lua
 -- https://github.com/folke/lua-dev.nvim/blob/main/lua/lua-dev/sumneko.lua
 local luadev = require("lua-dev").setup({
@@ -96,43 +95,115 @@ local luadev = require("lua-dev").setup({
 
 lspconfig.sumneko_lua.setup(luadev)
 
--- Solidity
--- https://github.com/qiuxiang/solidity-ls
+-- Solidity ===================================================================
+-- brew install solidity
 -- https://github.com/neovim/nvim-lspconfig/tree/master/lua/lspconfig/server_configurations
-require 'lspconfig.configs'.solidity = {
+
+-- https://github.com/qiuxiang/solidity-ls
+-- npm i solidity-ls -g
+configs.qiuxiang_solidity = {
   default_config = {
     cmd = { 'solidity-ls', '--stdio' },
     filetypes = { 'solidity' },
-    root_dir = lspconfig.util.find_git_ancestor,
+    root_dir = function(fname)
+      return util.find_git_ancestor(fname)
+          or util.find_node_modules_ancestor(fname)
+          or util.find_package_json_ancestor(fname)
+          or vim.loop.cwd()
+    end,
     single_file_support = true,
   },
 }
 
-lspconfig.solidity.setup {
+-- https://github.com/juanfranblanco/vscode-solidity
+local vscode_extension_path = vim.env.HOME .. "/.vscode/extensions/"
+local juanfranblanco_server = vscode_extension_path .. 'juanblanco.solidity-0.0.139/out/src/server.js'
+
+configs.juanfranblanco_solidity = {
+  default_config = {
+    cmd = { "node", juanfranblanco_server, "--stdio" },
+    filetypes = { "solidity" },
+    root_dir = function(fname)
+      return util.find_git_ancestor(fname)
+          or util.find_node_modules_ancestor(fname)
+          or util.find_package_json_ancestor(fname)
+          or vim.loop.cwd()
+    end,
+    init_options = vim.fn.stdpath("cache"),
+    settings = {
+      solidity = {
+        nodemodulespackage = "solc",
+        compileUsingRemoteVersion = "latest",
+        compilerOptimization = 200,
+        compileUsingLocalVersion = "",
+        defaultCompiler = "remote", -- remote | localFile | localNodeModule | embedded
+        linter = "solhint", -- solhint | solium
+        solhintRules = nil,
+        formatter = "prettier", -- prettier | none
+        soliumRules = {
+          ["imports-on-top"] = 0,
+          ["variable-declarations"] = 0,
+          ["indentation"] = { "off", 4 },
+          ["quotes"] = { "off", "double" },
+        },
+        enabledAsYouTypeCompilationErrorCheck = true,
+        validationDelay = 1500,
+        packageDefaultDependenciesDirectory = "node_modules",
+        packageDefaultDependenciesContractsDirectory = "",
+      },
+    },
+  },
+}
+
+local default_server_settings = {
   on_attach = custom_attach,
   capabilities = updated_capabilities,
 }
 
--- Typescript
+-- lspconfig.juanfranblanco_solidity.setup(default_server_settings)
+-- lspconfig.qiuxiang_solidity.setup(default_server_settings)
+
+-- Typescript =================================================================
 require("typescript").setup({
+  server = default_server_settings,
+})
+
+-- Rust =======================================================================
+require('rust-tools').setup({
   server = {
     on_attach = custom_attach,
     capabilities = updated_capabilities,
-  },
+    standalone = true,
+  }
 })
 
--- LSP Signature
-require("lsp_signature").setup({
-  log_path = vim.env.HOME .. "/.cache/nvim/lsp-signature.log",
-  -- debug = true,
-  -- floating_window = false,
-  -- handler_opts = { border = "single" },
-  -- transparency = 10,
+-- Diagnostic =================================================================
+-- Renders diagnostics using virtual lines on top of the real line of code
+-- require("lsp_lines").setup()
+
+vim.diagnostic.config({
+  -- Disable virtual_text since it's redundant due to lsp_lines.
+  virtual_text = true,
+  -- With the default settings, you will not see updated diagnostics until you
+  -- leave insert mode. Set update_in_insert = true if you want diagnostics to
+  -- update while in insert mode.
+  update_in_insert = false,
 })
 
--- UI Customization
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
+
+map('n', '<leader>dp', vim.diagnostic.goto_prev, { desc = "Jump to previous diagnostic" })
+map('n', '<leader>dd', vim.diagnostic.goto_next, { desc = 'Jump to next diagnostic' })
+map('n', '<leader>df', vim.diagnostic.open_float, { desc = 'Show diagnostics in floating window.' })
+map('n', '<leader>ds', vim.diagnostic.setloclist, { desc = 'Add diagnostics to location list.' })
+
+vim.keymap.set("", "<Leader>dl", require("lsp_lines").toggle, { desc = "Toggle lsp_lines" })
+
+-- LSP signature hint =========================================================
+require("lsp_signature").setup({
+  log_path = vim.env.HOME .. "/.cache/nvim/lsp-signature.log",
+})

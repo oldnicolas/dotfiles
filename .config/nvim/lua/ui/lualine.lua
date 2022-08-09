@@ -11,24 +11,20 @@ end
 
 require('lualine').setup {
   options = {
-    section_separators = '',
+    section_separators = { left = '', right = '' },
     component_separators = { left = '', right = '' },
     globalstatus = true
   },
   sections = {
+    lualine_a = {},
     lualine_b = {
-      { 'filetype', icon_only = true, padding = { left = 1, right = 0 } },
-      { 'filename', file_status = true, path = 1, shorting_target = 40 },
-    },
-    lualine_c = {
-      { 'b:gitsigns_head', icon = '', padding = { left = 1, right = 0 } },
+      { 'b:gitsigns_head', icon = '' },
       { 'diff', source = diff_source },
     },
-    lualine_x = {
-      'lsp_progress',
-      { 'diagnostics', icons_enabled = true },
-    },
-    lualine_y = {},
+    lualine_c = { 'filename', 'diagnostics', },
+
+    lualine_x = { 'lsp_progress' },
+    lualine_y = { 'encoding', 'filetype' },
     lualine_z = {},
   }
 }

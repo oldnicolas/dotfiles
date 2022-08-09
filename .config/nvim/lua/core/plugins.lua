@@ -26,10 +26,14 @@ return require('packer').startup(function(use)
   use {
     'neovim/nvim-lspconfig',
     requires = {
-      { 'williamboman/nvim-lsp-installer' },
+      -- { 'williamboman/nvim-lsp-installer' },
+      { 'williamboman/mason.nvim' },
+      { 'williamboman/mason-lspconfig.nvim' },
       { 'ray-x/lsp_signature.nvim' },
+      { 'https://git.sr.ht/~whynothugo/lsp_lines.nvim' },
       { 'folke/lua-dev.nvim' },
       { 'jose-elias-alvarez/typescript.nvim' },
+      { 'simrat39/rust-tools.nvim' },
     },
     config = [[require 'core.lsp']]
   }
@@ -98,30 +102,26 @@ return require('packer').startup(function(use)
     config = function() require('which-key').setup() end
   }
 
-  use 'fladson/vim-kitty'
-  -- use 'tomlion/vim-solidity'
-  -- use 'simrat39/rust-tools.nvim'
-  -- use 'mfussenegger/nvim-dap'
-  -- use 'ThePrimeagen/harpoon'
-
-  -- use 'ray-x/aurora'
+  use 'ray-x/aurora'
   use 'fenetikm/falcon'
-  use 'kyazdani42/blue-moon'
-  use 'whatsthatsmell/codesmell_dark.vim'
-
-  use 'ishan9299/nvim-solarized-lua'
-  use 'mhartington/oceanic-next'
+  use 'Mofiqul/vscode.nvim'
   use 'folke/tokyonight.nvim'
   use 'rebelot/kanagawa.nvim'
-  use 'Mofiqul/vscode.nvim'
-  use { 'rose-pine/neovim', as = 'rose-pine', tag = 'v1.*', }
+  use 'Tsuzat/NeoSolarized.nvim'
+  use { "catppuccin/nvim", as = "catppuccin", run = ":CatppuccinCompile" }
+  use { 'rose-pine/neovim', as = 'rose-pine', tag = 'v1.*' }
+  use { 'luisiacc/gruvbox-baby', branch = 'main' }
+  use 'whatsthatsmell/codesmell_dark.vim'
+  use 'B4mbus/oxocarbon-lua.nvim'
 
-  use {
-    'nvim-lualine/lualine.nvim',
-    requires = {
-      { 'kyazdani42/nvim-web-devicons' },
-      { 'arkav/lualine-lsp-progress' }
-    },
-    config = [[require 'ui.lualine']]
-  }
+  -- use {
+  --   'nvim-lualine/lualine.nvim',
+  --   requires = {
+  --     { 'kyazdani42/nvim-web-devicons' },
+  --     { 'arkav/lualine-lsp-progress' }
+  --   },
+  --   config = [[require 'ui.lualine']]
+  -- }
+
+  use 'fladson/vim-kitty'
 end)

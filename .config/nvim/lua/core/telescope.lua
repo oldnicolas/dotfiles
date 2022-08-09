@@ -4,6 +4,7 @@ local actions = require('telescope.actions')
 -- Setup
 telescope.setup {
   defaults = {
+    file_ignore_patterns = { "node_modules/*" },
     sorting_strategy = "ascending",
     layout_strategy = "flex",
     layout_config = {
@@ -67,7 +68,7 @@ map('n', '<leader>sm', '<cmd>Telescope man_pages<cr>')
 
 map('n', '<leader>st', function()
   require 'telescope.builtin'.colorscheme({ layout_strategy = 'bottom_pane' })
-end)
+end, { desc = "Telescope colorscheme" })
 
 map('n', '<leader>sq', '<cmd>Telescope quickfix<cr>')
 map('n', '<leader>sk', '<cmd>Telescope keymaps<cr>')
